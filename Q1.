@@ -1,0 +1,38 @@
+library(dplyr)
+library(ggplot2)
+
+data <- read.csv("students_performance.csv", stringsAsFactors = FALSE)
+
+data$MathScore[is.na(data$MathScore)] <- mean(data$MathScore, na.rm = TRUE)
+data$ReadingScore[is.na(data$ReadingScore)] <- mean(data$ReadingScore, na.rm = TRUE)
+data$WritingScore[is.na(data$WritingScore)] <- mean(data$WritingScore, na.rm = TRUE)
+data$StudyHoursPerWeek[is.na(data$StudyHoursPerWeek)] <- mean(data$StudyHoursPerWeek, na.rm = TRUE)
+
+data$AverageScore <- rowMeans(data[, c("MathScore", "ReadingScore", "WritingScore")])
+
+summary_stats <- data %>%
+  group_by(Gender) %>%
+  summarise(
+    Mean = mean(AverageScore),
+    Median = median(AverageScore),
+    SD = sd(AverageScore)
+  )
+print(summary_stats)
+
+ggplot(data, aes(x = Gender, y = AverageScore, fill = Gender)) +
+  geom_boxplot() +
+  theme_minimal() +
+  ggtitle("Boxplot of AverageScore by Gender")
+
+ggplot(data, aes(x = StudyHoursPerWeek, y = AverageScore)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  theme_minimal() +
+  ggtitle("Study Hours vs Average Score")
+
+model_simple <- lm(AverageScore ~ StudyHoursPerWeek, data = data)
+summary(model_simple)
+
+data$Gender <- as.factor(data$Gender)
+model_multiple <- lm(AverageScore ~ StudyHoursPerWeek + Gender, data = data)
+summary(model_multiple)
