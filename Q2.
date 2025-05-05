@@ -1,0 +1,66 @@
+library(dplyr)
+library(psych)
+
+# Q1 (Part 1): Vector Operations
+x <- c(10, 20, 30, 40, 50)
+sum(x)
+x * 2
+x[c(2, 4)]
+
+# Q2 (Part 1): 3x3 Matrix Operations
+A <- matrix(1:9, nrow = 3, byrow = TRUE)
+t(A)
+B <- matrix(9:1, nrow = 3, byrow = TRUE)
+A %*% B
+
+# Q3 (Part 1): Student Data Frame
+students <- data.frame(
+  Name = c("Rahul", "Priya", "Amit", "Neha"),
+  Age = c(20, 22, 21, 23),
+  Score = c(85, 90, 78, 92)
+)
+students <- rbind(students, c("Sonia", 22, 88))
+students$Age <- as.numeric(students$Age)
+students$Score <- as.numeric(students$Score)
+subset(students, Score > 80)
+mean(students$Score)
+
+# Q4 (Part 1): mtcars Dataset Summary
+data(mtcars)
+mean(mtcars$mpg)
+median(mtcars$mpg)
+mode_mpg <- as.numeric(names(sort(table(mtcars$mpg), decreasing = TRUE)[1]))
+mode_mpg
+geometric.mean(mtcars$hp)
+harmonic.mean(mtcars$wt)
+
+# Q1 (Part 2): Vector
+x <- c(15, 25, 35, 45, 55)
+sum(x)
+x * 5
+x[c(3, 5)]
+
+# Q2 (Part 2): 4x4 Matrix
+A <- matrix(1:16, nrow = 4, byrow = TRUE)
+t(A)
+B <- matrix(16:1, nrow = 4, byrow = TRUE)
+A %*% B
+
+# Q3 (Part 2): iris Dataset Summary
+data(iris)
+mean(iris$Sepal.Length)
+median(iris$Sepal.Length)
+mode_sepal <- as.numeric(names(sort(table(iris$Sepal.Length), decreasing = TRUE)[1]))
+mode_sepal
+aggregate(Petal.Width ~ Species, data = iris, mean)
+
+# Q4 (Part 2): Data Frame with Missing Values
+df <- data.frame(
+  ID = 1:8,
+  Age = c(25, 30, NA, 35, 40, NA, 45, 50),
+  Salary = c(50000, 55000, 60000, NA, 70000, 75000, NA, 90000)
+)
+colSums(is.na(df))
+df$Age[is.na(df$Age)] <- mean(df$Age, na.rm = TRUE)
+df$Salary[is.na(df$Salary)] <- mean(df$Salary, na.rm = TRUE)
+print(df)
